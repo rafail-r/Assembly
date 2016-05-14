@@ -1,0 +1,44 @@
+START:	
+	LDA 2000H
+	MOV B,A	;B=A
+NXOR4:
+	RAR		;slide A3 sto B3
+	XRA B		;XOR
+	CMA		;NOT (NXOR)
+	ANI 40H	;apomonose to B3
+	RAR
+	RAR
+	RAR		;slide sto X3
+	MOV C,A	;save sto C
+NOR3:
+	MOV A,B	;anaktisi tou A
+	RAR		;slide A2 sto B2
+	ORA B		;OR
+	CMA		;NOT (NOR)
+	ANI 10H	;apomonose to B2
+	RAR
+	RAR		;slide sto X2
+	ORA C
+	MOV C,A	;save sto C
+AND2:
+	MOV A,B	;anaktisi tou A
+	RAR		;slide A1 sto B1
+	ANA B		;AND
+	ANI 04H	;apomonose to B1
+	RAR		;slide sto X1
+	ORA C
+	MOV C,A	;save sto C
+AND1:
+	MOV A,B	;anaktisi tou A
+	RAL		;slide BO sto A0
+	ANA B		;AND
+OR5:
+	ORA C		;OR me to proigoumeno (tou AND2)
+	ANI 02H	;apomonose to A0
+	RAR		;slide sto X0
+	ORA C		;print xoris save
+PRINT:
+	CMA
+	STA	3000H
+	JMP	START
+END

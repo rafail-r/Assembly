@@ -1,0 +1,43 @@
+
+
+START:  
+        MVI A,10H ;10H = NO DISPLAY
+       
+        STA 0BF3H   ;STORE 4TH DIGIT VALUE
+        STA 0BF4H   ;STORE 5TH DIGIT VALUE
+        STA 0BF5H   ;STORE 6TH DIGIT VALUE
+
+        
+NEW_INP:
+        LDA 2000H   ;LOAD INPUT
+        
+        CALL GETDIG ;GET 1ST DIGIT IN A, THE REST IN B
+        STA 0BF0H   ;STORE 1ST DIGIT VALUE
+        
+        MOV A,B
+        CALL GETDIG ; GET 2ND DIGIT IN A
+                    ; 3RD IN B
+        STA 0BF1H   ;STORE 2ND DIGIT VALUE
+        MOV A,B
+        STA 0BF2H   ;STORE 3RD DIGIT VALUE
+        
+  
+        CALL DCD    ; DECODE BCDS IN 0BF0H-0BF5H AND DISPLAY
+        JMP NEW_INP ; JUMP TO THE BEGINNING
+
+
+
+GETDIG:
+         MVI B,00H  ;INITIALISE 
+       
+CHECK_A: 
+         CPI 0AH
+         JC END  ;A<10?
+         INR B   ;B+1
+         SUI 0AH ;A-10
+         JMP CHECK_A ;CHECK AGAIN
+ 
+END:    RET 
+
+
+END  

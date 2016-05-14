@@ -1,0 +1,112 @@
+START:
+	CALL CLEAN	;_ _ _ _ . .
+FIRSTREAD:
+	CALL KIND	;diavase input
+	CPI 85H	;an FETCH PC, neo input
+	JZ NEWREAD
+	JMP FIRSTREAD
+;diavase FETCHPC, 1, 2, 3
+WAITPC:
+	CALL KIND	;diavase input
+	CPI 85H	;an FETCH PC, neo input
+	JZ NEWREAD	
+	CPI 01H	;an 1, rotate left
+	CZ ROTATEL
+	CPI 02H	;an 2, rotate right
+	CZ ROTATER
+	CPI 03H	;an 3, kentrarisma
+	JZ STATIC
+	JMP WAITPC	;allios loop
+
+;neo input
+NEWREAD:
+	CALL CLEAN	;_ _ _ _ . .
+	MVI C,04H	;4 nea input
+	LXI H,0B06H	;me to proto INX H tha ginei 0B02H
+READINPUT:
+	DCR C
+	DCX H		;epomeni thesi
+	CALL KIND	;diavase
+	MOV M,A	;save
+	CALL PRINT	;print
+	MOV A,C	
+	CPI 00H	;an pira 4
+	JZ WAITPC	;epistrofi
+	JMP READINPUT	;allios sinexeia me ta epomena
+
+;printing...
+PRINT:
+	PUSH H
+	LXI D,0B00H
+	CALL STDM
+	CALL DCD
+	POP H
+	RET
+
+;rotating left...
+ROTATEL:
+	LDA 0B05H
+	MOV B,A	;krataw to 5
+	LDA 0B04H	;ola mia thesi aristera
+	STA 0B05H
+	LDA 0B03H
+	STA 0B04H
+	LDA 0B02H
+	STA 0B03H
+	LDA 0B01H
+	STA 0B02H
+	LDA 0B00H
+	STA 0B01H
+	MOV A,B	;to 5 sto 1
+	STA 0B00H
+	CALL PRINT
+	MVI A,00H	;an to A girnage 1 h 2, tha ekane lathos
+	RET
+
+;rotating right...
+ROTATER:
+	LDA 0B00H
+	MOV B,A	;krataw to 0
+	LDA 0B01H	;ola mia thesi deksia
+	STA 0B00H
+	LDA 0B02H
+	STA 0B01H
+	LDA 0B03H
+	STA 0B02H
+	LDA 0B04H
+	STA 0B03H
+	LDA 0B05H
+	STA 0B04H
+	MOV A,B
+	STA 0B05H
+	CALL PRINT
+	MVI A,00H	;an to A girnage 1 h 2, tha ekane lathos
+	RET
+
+;kentrarisma...
+STATIC:
+	CALL ROTATER 	;rotate mexri na einai sto kentro
+	LDA 0B00H	;an to 0 einai _ des to 5 
+	CPI 10H
+	JZ CHECK05
+	JMP STATIC	;allios sinexise to rotation
+CHECK05:
+	LDA 0B05H	;an KAI to 5 einai _ 
+	CPI 10H
+	JZ WAITPC	;epistrofi
+	JMP STATIC	;allios sinexise to rotation
+
+;routina na emfanizonte "_ _ _ _ . ." stin arxi kai se kathe FETCH PC
+CLEAN:
+	MVI A,10H	;keno sto 0 1
+	STA 0B00H
+	STA 0B01H
+	MVI A,17H	;_ sto 2 3 4 5
+	STA 0B02H
+	STA 0B03H
+	STA 0B04H
+	STA 0B05H
+	CALL PRINT	;print
+	RET
+
+END

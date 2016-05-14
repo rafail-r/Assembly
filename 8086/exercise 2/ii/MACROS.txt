@@ -1,0 +1,44 @@
+PRINT MACRO CHAR 
+    PUSH DX 
+    PUSH AX 
+    MOV DL,CHAR 
+    MOV AH,2 
+    INT 21H 
+    POP AX 
+    POP DX 
+ENDM 
+
+
+EXIT MACRO 
+    MOV AX,4C00H 
+    INT 21H 
+ENDM 
+
+
+READ MACRO 
+    MOV AH,8 
+    INT 21H 
+ENDM 
+
+
+PRINT_STR MACRO STRING 
+    PUSH DX 
+    PUSH AX 
+    MOV DX,OFFSET STRING 
+    MOV AH,9 
+    INT 21H 
+    POP AX
+    POP DX 
+ENDM 
+
+
+BSPACE MACRO  
+    PUSH AX 
+    MOV DL,08H 
+    MOV AH,2 
+    INT 21H 
+    MOV DL,20H 
+    MOV AH,2 
+    INT 21H 
+    POP AX 
+ENDM 

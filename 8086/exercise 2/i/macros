@@ -1,0 +1,33 @@
+print macro char
+    mov dl,char
+    mov ah,2
+    int 21h
+endm
+
+read macro 
+    mov ah,8
+    int 21h
+endm  
+
+print_str macro string
+    lea dx, string
+    mov ah,9
+    int 21h
+endm  
+
+exit macro
+    mov ax,4c00h
+    int 21h
+endm					
+
+char_dec macro          ;Εδώ από τα δεκαδικά ψηφία που διαβάζουμε
+						;σχηματίζουμε δυαδικό αριθμό
+						;και τον αποθηκεύουμε στον ΒΧ
+	push ax             ;Σώζουμε τον AX στη στοίβα
+	mov ax,10           
+	mul bx
+	mov bx,ax           ;Πολλαπλασιάζουμε με 10 τον αριθμό
+	pop ax              ;Επαναφορά του AX από τη στοίβα
+	mov ah,0
+	add bx,ax           ;Προσθέτουμε το ψηφίο που διαβάσαμε
+endm

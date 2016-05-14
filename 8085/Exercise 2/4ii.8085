@@ -1,0 +1,32 @@
+START:
+	IN 10H			; afairesi prostasias mnimis
+	LXI D,0B00H		; arxikopoihsh
+	LXI H,0B00H		 
+	MVI M,10H		; apothikeusi kenou
+	INX H			; xaraktira
+	MVI M,10H		; sta 4 deksiotera 7seg
+	INX H
+	MVI M,10H
+	INX H
+	MVI M,10H
+	INX H
+NEXT:
+	CALL KIND		; Klisi KIND kai
+	MOV B,A			; lipsi kwdikou.
+	ANI 0FH			; Spasimo se 2 kommatia.
+	MOV M,A			; Swsimo sti mnimi
+	INX H			; apo opou tha diabastoun
+	MOV A,B			; apo tin STDM.
+	ANI F0H
+	RRC				; Gia to deutero psifio
+	RRC				; metafora sta 4 LSBs
+	RRC
+	RRC
+	MOV M,A			; Deutero swsimo sti mnimi.
+	CALL STDM		; Routines 7seg
+	CALL DCD
+	LXI H,0B04H		; Ksana arxikopoihsh
+	LXI D,0B00H		
+	JMP NEXT		; epanalipsi diadikasias
+	END
+		
